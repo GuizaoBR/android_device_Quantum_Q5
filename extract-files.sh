@@ -1,7 +1,7 @@
 #!/bin/bash
 
-VENDOR=lenovo
-DEVICE=A7010a48
+VENDOR=Quantum
+DEVICE=Q5
 
 BASE=../../../vendor/$VENDOR/$DEVICE/proprietary
 

@@ -1,12 +1,8 @@
-import init.project.rc
 import init.mt6735.usb.rc
-import init.microtrust.rc
 import init.modem.rc
-import init.volte.rc
 
 on init
     export LD_PRELOAD "libmtk_symbols.so"
-    #export LD_SHIM_LIBS "/system/lib/libshowlogo.so|libshim_asc.so:/system/lib/libmtk_mmutils.so|libshim_asc.so:/system/lib/libui.so|libshim_ui.so:/system/lib64/libui.so|libshim_ui.so:/system/lib/hw/hwcomposer.mt6753.so|libshim_cam.so:/system/lib64/hw/hwcomposer.mt6753.so|libshim_cam.so:/system/lib/libcam.client.so|libshim_cam.so:/system/lib64/libcam.client.so|libshim_cam.so:/system/lib/libMtkOmxVdec.so|libshim_cam.so:/system/lib64/libMtkOmxVdec.so|libshim_cam.so:/system/lib/liblog.so|liblog_mtk.so:/system/lib64/liblog.so|liblog_mtk.so:/system/lib/libmedia.so|libshim_audio.so:/system/lib64/libmedia.so|libshim_audio.so:/system/lib/libmedia.so|libshim_audioCompat.so:/system/lib64/libmedia.so|libshim_audioCompat.so:/system/lib/libcam.camnode.so|libshim_gui.so:/system/lib64/libcam.camnode.so|libshim_gui.so:/system/lib/libcam.client.so|libshim_gui.so:/system/lib64/libcam.client.so|libshim_gui.so:/system/lib/libcam_utils.so|libshim_gui.so:/system/lib64/libcam_utils.so|libshim_gui.so:/system/lib/libmtk_mmutils.so|libshim_gui.so:/system/lib64/libmtk_mmutils.so|libshim_gui.so:/system/lib/libMtkOmxVenc.so|libshim_gui.so:/system/lib64/libMtkOmxVenc.so|libshim_gui.so:/system/lib64/librilmtk.so|libshim_parcel.so:/system/lib64/librilmtkmd2.so|libshim_parcel.so:/system/lib/libshowlogo.so|libshim_fence.so:/system/lib/libMtkOmxVdecEx.so|libshim_fence.so"
 
     # mount points
     mkdir /protect_f 0771 system system
@@ -18,7 +14,7 @@ on init
     chmod 0660 /dev/kmsg
 
 on charger
-    mkdir /dev/block/platform/mtk-msdc.0/11230000.msdc0/by-name 0755 root system
+    mkdir /dev/block/platform/mtk-msdc.0/by-name 0755 root system
     symlink /dev/block/platform/mtk-msdc.0/11230000.msdc0/by-name/logo /dev/block/platform/mtk-msdc.0/by-name/logo
 
     mount ext4 /dev/block/platform/mtk-msdc.0/11230000.msdc0/by-name/system /system ro wait
@@ -49,7 +45,7 @@ on post-fs
     restorecon_recursive /nvdata
 
     # Workaround for old nvram blobs
-    mkdir /dev/block/platform/mtk-msdc.0/11230000.msdc0/by-name 0755 root system
+    mkdir /dev/block/platform/mtk-msdc.0/by-name 0755 root system
     symlink /dev/block/platform/mtk-msdc.0/11230000.msdc0/by-name/nvram /dev/block/platform/mtk-msdc.0/by-name/nvram
     symlink /dev/block/platform/mtk-msdc.0/11230000.msdc0/by-name/proinfo /dev/block/platform/mtk-msdc.0/by-name/proinfo
 
@@ -60,20 +56,8 @@ on post-fs
 
     mknod /dev/stpwmt c 190 0
     mknod /dev/stpgps c 191 0
-    mknod /dev/stpbt  c 192 0
+    mknod /dev/stpbt c 192 0
 
-# WiFi
-    mkdir /data/misc/wifi 0770 wifi wifi
-    mkdir /data/misc/wifi/sockets 0770 wifi wifi
-    mkdir /data/misc/wpa_supplicant 0770 wifi wifi
-    chown wifi wifi /data/misc/wifi	
-	
-#For WiFi High Speed calibration 
-       service autokd /system/bin/autokd 
-       class core 
-       user system 
-       group system
-	
     # BT
     chmod 0660 /dev/stpbt
     chown radio bluetooth /dev/stpbt
@@ -205,7 +189,7 @@ on post-fs-data
     chown system system /sys/class/misc/m_batch_misc/batchbatch
     chown system system /sys/class/misc/m_batch_misc/batchflush
 
-    chmod 0660 /sys/class/misc/m_gyro_misc/gyroenablenodata
+	chmod 0660 /sys/class/misc/m_gyro_misc/gyroenablenodata
     chmod 0660 /sys/class/misc/m_gyro_misc/gyroactive
     chmod 0660 /sys/class/misc/m_gyro_misc/gyrodelay
     chmod 0660 /sys/class/misc/m_gyro_misc/gyrobatch
@@ -583,7 +567,6 @@ service agpsd /system/bin/mtk_agpsd
     socket agpsd3 stream 660 gps inet
     user gps
     group gps radio inet sdcard_r sdcard_rw misc
-    setenv LD_SHIM_LIBS "/system/bin/mtk_agpsd|libshim_agps.so"
 
 service wifi2agps /system/bin/wifi2agps
     class main
@@ -661,21 +644,3 @@ service etsd /system/bin/etsd
 service fingerprintd /system/bin/fingerprintd
     class late_start
     user root
-
-	
-SPM - Service Power Manager
-service spm_script /system/bin/spm_loader
-    class core
-    user root
-    group root
-# Initiate vt service
-service vtservice /system/bin/vtservice
-    class main
-    socket soc_vt_tcv dgram 660 radio system
-    socket soc_vt_stk dgram 660 radio system
-    socket soc_vt_svc dgram 660 radio system
-    socket volte_vt stream 660 root system
-    user system
-    group system camera graphics inet net_admin net_raw media sdcard_rw radio sdcard_r media_rw
-    ioprio rt 4
-	

@@ -15,19 +15,17 @@
 #
 
 # Device path
-LOCAL_PATH := device/lenovo/A7010a48
+LOCAL_PATH := device/Quantum/Q5
 
 # Device board elements
 include $(LOCAL_PATH)/board/*.mk
 
-# Device vendor board
--include vendor/lenovo/A7010a48/BoardConfigVendor.mk
-
+//# Device vendor board
+#-include vendor/Quantum/Q5/BoardConfigVendor.mk
 #######################################################################
 
 # Kernel
-TARGET_KMODULES := true
-BOARD_GLOBAL_CFLAGS += -DDISABLE_HW_ID_MATCH_CHECK
+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/kernel
 
 # Disable memcpy opt (for audio libraries)
 TARGET_CPU_MEMCPY_OPT_DISABLE := true
