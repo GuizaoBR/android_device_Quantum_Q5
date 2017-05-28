@@ -1,0 +1,6 @@
+{
+    "remote": "github",
+    "repository": "GuizaoBR/android_device_Quantum_Q5",
+    "target_path": "vendor/Quantum/Q5",
+    "branch": "LineageOS-14.1"
+  }
